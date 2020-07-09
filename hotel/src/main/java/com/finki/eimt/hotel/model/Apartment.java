@@ -7,10 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -18,9 +15,11 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table
 public class Apartment {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany
@@ -32,5 +31,10 @@ public class Apartment {
 
     private Integer numberOfBalconies;
 
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "currency", column = @Column(name = "currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "amount"))
+    })
     private Price pricePerDay;
 }

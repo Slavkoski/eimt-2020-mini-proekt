@@ -4,10 +4,7 @@ package com.finki.eimt.hotel.rest;
 import com.finki.eimt.hotel.model.Apartment;
 import com.finki.eimt.hotel.model.Reservation;
 import com.finki.eimt.hotel.service.ReservationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +16,16 @@ public class ReservationController {
 
     public ReservationController(final ReservationService reservationService) {
         this.reservationService = reservationService;
+    }
+
+    @GetMapping
+    public List<Reservation> getAll(){
+        return reservationService.getAll();
+    }
+
+    @GetMapping(value = "/{id}")
+    public Reservation getDetails(@PathVariable Long id){
+        return reservationService.getById(id);
     }
 
     @PostMapping

@@ -3,13 +3,17 @@ package com.finki.eimt.hotel.model.price;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Embeddable
 @AllArgsConstructor
-public class Price {
+public class Price implements Serializable {
 
+    @Enumerated(value = EnumType.STRING)
     private final Currency currency;
 
     private final Double amount;
@@ -23,6 +27,10 @@ public class Price {
         return new Price(this.currency,this.amount+price.getAmountWithCurrency(this.currency));
     }
 
+    public Price multiply(int m){
+        return new Price(this.currency,this.amount*m);
+    }
+
     public Double getAmountWithCurrency(Currency currency){
         Map<Currency,Double> currencyMap=new HashMap<>();
         currencyMap.put(Currency.EUR,61.5);
@@ -31,5 +39,4 @@ public class Price {
         double amountInMKD=this.amount*currencyMap.get(this.currency);
         return amountInMKD*(1/currencyMap.get(currency));
     }
-
 }
