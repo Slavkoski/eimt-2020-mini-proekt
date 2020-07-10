@@ -1,6 +1,6 @@
 package com.finki.eimt.hotel;
 
-import com.finki.eimt.hotel.model.price.Currency;
+import com.finki.eimt.hotel.exceptions.ApartmentAlreadyReservedException;
 import com.finki.eimt.hotel.service.ApartmentService;
 import com.finki.eimt.hotel.service.ReservationService;
 import com.finki.eimt.hotel.service.RoomService;
@@ -25,15 +25,15 @@ public class DataGenerator {
 
     @PostConstruct
     @Transactional
-    public void importData(){
+    public void importData() throws ApartmentAlreadyReservedException {
         roomService.save(1);
         roomService.save(2);
         roomService.save(3);
         roomService.save(4);
         roomService.save(5);
-        apartmentService.addApartment(new Long[]{1L, 2L},2,2,1600.0, "MKD");
-        apartmentService.addApartment(new Long[]{3L},1,1,1100.0, "MKD");
-        apartmentService.addApartment(new Long[]{4L},2,1,1400.0, "MKD");
-        reservationService.makeReservation("Antonio","Slavkoski","A123456","a.s@gmail.com","070123456", Arrays.asList(1L,2L),"2020-08-01","2020-08-12");
+        apartmentService.addApartment(new Long[]{1L, 2L}, 2, 2, 1600.0, "MKD");
+        apartmentService.addApartment(new Long[]{3L}, 1, 1, 1100.0, "MKD");
+        apartmentService.addApartment(new Long[]{4L}, 2, 1, 1400.0, "MKD");
+        reservationService.makeReservation("Antonio", "Slavkoski", "A123456", "a.s@gmail.com", "070123456", Arrays.asList(1L, 2L), "2020-08-01", "2020-08-12");
     }
 }

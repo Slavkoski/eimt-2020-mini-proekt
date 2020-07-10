@@ -2,13 +2,10 @@ package com.finki.eimt.hotel.rest;
 
 
 import com.finki.eimt.hotel.model.Apartment;
-import com.finki.eimt.hotel.model.Room;
-import com.finki.eimt.hotel.model.price.Price;
 import com.finki.eimt.hotel.service.ApartmentService;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.OneToMany;
 import java.util.List;
 
 @RestController
@@ -22,13 +19,18 @@ public class ApartmentController {
     }
 
     @GetMapping
-    public List<Apartment> getAll(){
+    public List<Apartment> getAll() {
         return apartmentService.getAllApartments();
     }
 
     @GetMapping(value = "/{id}")
-    public Apartment getDetails(@PathVariable Long id){
+    public Apartment getDetails(@PathVariable Long id) {
         return apartmentService.getApartmentById(id);
+    }
+
+    @GetMapping(value = "/{id}/available")
+    public boolean isAvailable(@PathVariable Long id, @RequestParam String dateFrom, @RequestParam String dateTo) {
+        return apartmentService.isReserved(id, dateFrom, dateTo);
     }
 
     @PostMapping
@@ -36,7 +38,7 @@ public class ApartmentController {
                                   @RequestParam Integer numberOfBalconies,
                                   @RequestParam Long[] rooms,
                                   @RequestParam Double pricePerDay,
-                                  @RequestParam String priceCurrency){
-        return apartmentService.addApartment(rooms,numberOfBathrooms,numberOfBalconies,pricePerDay,priceCurrency);
+                                  @RequestParam String priceCurrency) {
+        return apartmentService.addApartment(rooms, numberOfBathrooms, numberOfBalconies, pricePerDay, priceCurrency);
     }
 }

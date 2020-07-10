@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,9 +33,10 @@ public class Apartment {
     private Integer numberOfBalconies;
 
     @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "amount"))
-    })
     private Price pricePerDay;
+
+    public boolean isValid() {
+        return ObjectUtils.allNotNull(rooms, numberOfRooms, numberOfBalconies, numberOfBathrooms, pricePerDay)
+                && numberOfRooms > 0 && numberOfBalconies >= 0 && numberOfBathrooms >= 0 && rooms.stream().allMatch(Room::isValid);
+    }
 }

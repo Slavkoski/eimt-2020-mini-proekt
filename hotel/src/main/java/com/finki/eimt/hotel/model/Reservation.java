@@ -26,7 +26,7 @@ public class Reservation {
 
     private Long userId;
 
-    @OneToMany
+    @ManyToMany
     private List<Apartment> apartments;
 
     private LocalDate dateFrom;
@@ -36,8 +36,8 @@ public class Reservation {
     private Price totalPrice;
 
     public boolean isValid() {
-        return ObjectUtils.allNotNull(userId,apartments,dateFrom,dateTo,totalPrice)
-                && !apartments.isEmpty();
+        return ObjectUtils.allNotNull(userId, apartments, dateFrom, dateTo, totalPrice)
+                && !apartments.isEmpty() && dateFrom.isBefore(dateTo) && apartments.stream().allMatch(Apartment::isValid);
     }
 
     public boolean containsApartment(Apartment apartment){

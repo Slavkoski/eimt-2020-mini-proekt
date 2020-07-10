@@ -1,7 +1,7 @@
 package com.finki.eimt.hotel.rest;
 
 
-import com.finki.eimt.hotel.model.Apartment;
+import com.finki.eimt.hotel.exceptions.ApartmentAlreadyReservedException;
 import com.finki.eimt.hotel.model.Reservation;
 import com.finki.eimt.hotel.service.ReservationService;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +36,13 @@ public class ReservationController {
                                        @RequestParam String phoneNumber,
                                        @RequestParam List<Long> apartments,
                                        @RequestParam String dateFrom,
-                                       @RequestParam String dateTo) {
-        return reservationService.makeReservation(firstName,lastName,idCardNumber,email,phoneNumber,apartments,dateFrom,dateTo);
+                                       @RequestParam String dateTo) throws ApartmentAlreadyReservedException {
+        return reservationService.makeReservation(firstName, lastName, idCardNumber, email, phoneNumber, apartments, dateFrom, dateTo);
+    }
+
+    @PostMapping(value = "/delete")
+    public void deleteReservation(@RequestParam Long reservationId) {
+        reservationService.delete(reservationId);
     }
 
 }

@@ -9,11 +9,13 @@ import com.finki.eimt.hotel.repository.ApartmentRepository;
 import com.finki.eimt.hotel.repository.ReservationRepository;
 import com.finki.eimt.hotel.service.ApartmentService;
 import com.finki.eimt.hotel.service.RoomService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,7 +48,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         Reservation anyReservation = reservationRepository
                 .findAll()
                 .stream()
-                .filter(reservation -> isOverlaping(reservation, dateFrom, dateTo))
+                .filter(reservation -> isOverlapping(reservation, dateFrom, dateTo))
                 .filter(reservation -> reservation.containsApartment(apartment))
                 .findAny().orElse(null);
         return anyReservation != null;
@@ -69,7 +71,18 @@ public class ApartmentServiceImpl implements ApartmentService {
         return null;
     }
 
-    private boolean isOverlaping(Reservation reservation, LocalDate dateFrom, LocalDate dateTo) {
+    @Override
+    public boolean isReserved(Long id, String dateFrom, String dateTo) {
+        Optional<Apartment> apartment = apartmentRepository.findById(id);
+        LocalDate localDateFrom = LocalDate.parse(dateFrom);
+        LocalDate localDateTo = LocalDate.parse(dateTo);
+        if (apartment.isPresent() && ObjectUtils.allNotNull(localDateFrom, localDateTo)) {
+            return isReserved(apartment.get(), localDateFrom, localDateTo);
+        }
+        return false;
+    }
+
+    private boolean isOverlapping(Reservation reservation, LocalDate dateFrom, LocalDate dateTo) {
         return Math.max(reservation.getDateFrom().toEpochDay(), dateFrom.toEpochDay()) < Math.min(reservation.getDateTo().toEpochDay(), dateTo.toEpochDay());
     }
 }

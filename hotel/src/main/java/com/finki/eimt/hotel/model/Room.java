@@ -20,4 +20,8 @@ public class Room {
     private Long id;
 
     private Integer numberOfBeds;
+
+    public boolean isValid() {
+        return numberOfBeds != null && numberOfBeds > 0;
+    }
 }
